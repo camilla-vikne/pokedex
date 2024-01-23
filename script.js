@@ -1,68 +1,197 @@
-//get the html elements:
-const buttonHome = document.getElementById("btn-home");
-const buttonPrev = document.getElementById("btn-prev");
-const buttonNext = document.getElementById("btn-next");
-const errorMsgEl = document.getElementById("error-msg");
-const mainContainer = document.getElementById("main-container");
+// get the html elements:
+const buttonHome = document.getElementById("btn-home")
+const buttonPrev = document.getElementById("btn-prev")
+const buttonNext = document.getElementById("btn-next")
+const errorMsgEl = document.getElementById("error-msg")
+const mainContainer = document.getElementById("main-container")
+const searchInputEl = document.getElementById("search-input")
+const searchButton = document.getElementById("search-button")
 
-const pokedexUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20";
-let pokemonList = [];
-//pokemonList.next: "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
+const pokedexUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
 
-//nav events:
+
+
+let pokemonList = []
+// pokemonList.next: 
+// "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
+
+// nav events:
 buttonHome.addEventListener("click", () => {
-  displayPokemonList();
-});
+  displayPokemonList()
+})
 
 buttonNext.addEventListener("click", () => {
-  if (pokemonList.next) displayPokemonList(pokemonList.next);
-  else displayPokemonList();
-});
+  
+  if (pokemonList.next) displayPokemonList(pokemonList.next)
+  else displayPokemonList()
+})
+
 buttonPrev.addEventListener("click", () => {
-  if (pokemonList.previous) displayPokemonList(pokemonList.previous);
-  else
-    displayPokemonList(
-      `https://pokeapi.co/api/v2/pokemon?offset=${pokemonList.lastPage}`
-    );
-});
+
+  if (pokemonList.previous) displayPokemonList(pokemonList.previous)
+  else displayPokemonList(`https://pokeapi.co/api/v2/pokemon?offset=${pokemonList.lastPage}&limit=20`)
+})
 
 const displayError = (errorMessage) => {
-  console.warn(errorMessage);
-  errorMsgEl.textContent = errorMessage;
-};
+  if (errorMessage) console.warn(errorMessage)
+
+  errorMsgEl.textContent = errorMessage
+}
+
 async function getData(url = pokedexUrl) {
-  const response = await fetch(url);
-  if (response.ok !== true) {
-    displayError(`noe gikk galt. Status: ${response.status}`);
-    return;
+  const response = await fetch(url)
+  if (response.ok !== true) { //if (response.status !== 200) {
+    displayError(`noe gikk galt. Status: ${response.status}`)
+    return 
   }
+  // clear the error message:
+  displayError()
 
-  const data = await response.json();
-  return data;
+  const data = await response.json() // response.text()
+
+  return data
 }
 
+/**
+ * Updates pokemonList
+ * @param {String} url - the url we want to get data from
+ */
+const updatePokemonList = async (url) => pokemonList = await getData(url)
+
+/**
+ * Updates the pokemonList.lastPage to given perPage-param
+ * @param {Number} perPage - number of pokemons per page (default 20)
+ * @returns 
+ */
+const setLastPage = (perPage = 20) => pokemonList.lastPage = Math.floor(pokemonList.count/perPage)*perPage
+
+// displays list of pokemons based on given url
 async function displayPokemonList(url) {
-  pokemonList = await getData(url);
-  //update last page if null: by calculating nr of pokemons and pokemons per page
-  pokemonList.lastPage = Math.floor(pokemonList.count / 20) * 20;
+  await updatePokemonList(url)
+  setLastPage()
 
-  mainContainer.innerHTML = "";
+  console.log(pokemonList.results)
+  mainContainer.innerHTML = ""
 
+  //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonList.results) {
-    const pokemonExtraData = await getData(pokemon.url);
-    const containerEl = document.createElement("div");
-    const titleEl = document.createElement("h2");
-    titleEl.textContent = `${pokemonExtraData.id}, ${pokemon.name}`;
-    const imageEl = document.createElement("img");
-    imageEl.alt = `image of ${pokemon.name}`;
-    imageEl.style = "max-width: 40%";
-    imageEl.src =
-      pokemonExtraData.sprites.other["official-artwork"].front_default;
 
-    console.log(pokemonExtraData);
-    containerEl.append(titleEl, imageEl);
-    mainContainer.append(containerEl);
-  }
+    // get the id and image of the pokemon:
+    //console.log(pokemon.url)
+    const pokemonExtraData = await getData(pokemon.url)
+
+    const containerEl = document.createElement("div")
+    const titleEl = document.createElement("h2")
+    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name}`
+    const imageEl = document.createElement("img")
+    imageEl.alt = `image of ${pokemon.name}`
+    imageEl.style = "max-width: 40%;"
+    imageEl.src = pokemonExtraData.sprites.other["official-artwork"].front_default
+
+    containerEl.append(titleEl, imageEl)
+    mainContainer.append(containerEl)
+
+    containerEl.addEventListener("click", () => displayPokemonDetails(pokemonExtraData))
+  };
 }
-async function displayPokemonDetails() {}
-displayPokemonList();
+
+async function displayPokemonDetails(pokemonData) {
+  mainContainer.innerHTML = ""
+
+  /* const name = pokemonData.name
+  const height = pokemonData.height */
+
+  const {id, name, sprites, base_experience, height, weight, types, stats} = pokemonData
+
+  const containerEl = document.createElement("div")
+  const titleEl = document.createElement("h2")
+  titleEl.textContent = `${id}. ${name}`
+  const imageEl = document.createElement("img")
+  imageEl.alt = `image of ${name}`
+  imageEl.style = "max-width: 40%;"
+  imageEl.src = sprites.other["official-artwork"].front_default
+
+  const xpEl = document.createElement("p")
+  xpEl.textContent = `XP: ${base_experience}`
+
+  const heightEl = document.createElement("p")
+  heightEl.textContent = `Height: ${height/10} M`
+
+  const weightEl = document.createElement("p")
+  weightEl.textContent = `Weight: ${weight/10} Kg`
+
+  const typesContainer = document.createElement("div")
+  const typesHeaderEl = document.createElement("h3")
+  typesHeaderEl.textContent = "Types:"
+  typesContainer.append(typesHeaderEl)
+
+  types.forEach(type => {
+    const typeEl = document.createElement("p")
+    typeEl.textContent = type.type.name
+    typesContainer.append(typeEl)
+  })
+
+  const statsContainer = document.createElement("div")
+  const statsHeaderEl = document.createElement("h3")
+  statsHeaderEl.textContent = "Stats:"
+  statsContainer.append(statsHeaderEl)
+
+  stats.forEach(value => {
+    const {stat, base_stat, effort} = value
+    const statEl = document.createElement("p")
+    statEl.textContent = `${stat.name}: ${base_stat} (effort:${effort})`
+    statsContainer.append(statEl)
+  })
+
+
+  containerEl.append(titleEl, imageEl, xpEl, heightEl, weightEl, typesContainer, statsContainer)
+  mainContainer.append(containerEl)
+}
+
+displayPokemonList()
+/////////////////////////////////////////////////
+//displ;ays list of pokemon based on given array of pokemons
+async function displayFilteredPokemonList(pokemonArray) {
+  mainContainer.innerHTML = ""
+
+  //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
+  for (const pokemon of pokemonArray) {
+
+    const pokemonExtraData = await getData(pokemon.url)
+
+    const containerEl = document.createElement("div")
+    const titleEl = document.createElement("h2")
+    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name}`
+    const imageEl = document.createElement("img")
+    imageEl.alt = `image of ${pokemon.name}`
+    imageEl.style = "max-width: 40%;"
+    imageEl.src = pokemonExtraData.sprites.other["official-artwork"].front_default
+
+    containerEl.append(titleEl, imageEl)
+    mainContainer.append(containerEl)
+
+    containerEl.addEventListener("click", () => displayPokemonDetails(pokemonExtraData))
+  };
+}
+
+searchButton.addEventListener("click", async () =>{
+  const searchText = searchInputEl.value.toLowerCase()
+//check if input is valid
+  if (searchText.lenght < 3) {
+  displayError("Please enter 3 or more characters")
+  return
+}
+//clear error message:
+  displayError()
+  //V 1. get the list of all pokemons in the api-database (this can be done by setting the limit to -1 or a number equal or larger to the total amount of pokemons in the database)
+  const pokemonResult = await getData("https://pokeapi.co/api/v2/pokemon?offset=0&limit=-1")
+  const pokemonArray = pokemonResult.results
+ 
+  // 2. filter the results based on the search-query
+  const filteredPokemons = pokemonArray.filter((pokemon) => pokemon.name.includes(searchText))
+  if (!filteredPokemons.length > 0) {
+    displayError("No pokémons found")
+    return
+  }
+  displayFilteredPokemonList(filteredPokemons)
+})
