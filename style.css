@@ -1,0 +1,113 @@
+/*classnames:
+pokemon-container
+title
+pokemon-regular
+pokemon-shiny
+type-container
+stat-container
+*/
+/*ids: 
+btn-home
+btn-prev
+btn-next
+search-input
+pokeball
+search-button
+error-msg
+main-container
+*/
+body{
+    background-image: url(./Pokedex_Background.webp);
+    background-position: center;
+    background-attachment: fixed;
+    background-size: contain;
+    }
+
+nav{
+    display: flex;
+    justify-content: center;
+    height: 100px;
+    width: 100%;
+}
+#btn-home, #btn-prev, #btn-next{
+    height: 50px;
+    width: 70px;
+    padding: 5px;
+    border: none;
+    border-radius: 20px;
+    margin: 10px;
+    background-color: grey;
+}
+#search-input{
+    height: 50px;
+    width: 200px;
+    border: 1px solid grey;
+    border-radius: 20px;
+    margin: 10px;
+    padding: 5px;
+}
+#pokeball{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border: 1px black solid;
+    background-image: linear-gradient(0deg, #fff 0%, #fff 50%, #fb0d3e 50%, #fb0d3e 100%) ;
+position: relative;
+margin: 10px;
+}
+#pokeball::before, #search-button, #search-button::before{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#pokeball::before{
+    content: '';
+    width: 52px;
+    background: black;
+    height: 5px;
+}
+#pokeball::after{
+    content: '';
+    background: white;
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    width: 8px;
+    height: 5px;
+    border-radius:50% ;
+    transform: rotate(-45deg);
+}
+#search-button{
+    background: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+#search-button::before{
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: 1px black solid;
+    border-radius: 50%;
+}
+#main-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+text-transform: capitalize;
+
+}
+.pokemon-container{
+    border: 1px solid rgb(53, 53, 53);
+    padding: 20px;
+   width: max-content;
+   background-color: rgba(250, 235, 215, 0.315);
+   margin: 10px;
+   border-radius: 30px;
+ 
+  
+ 
+   
+}

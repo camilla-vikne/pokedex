@@ -5,7 +5,8 @@ const buttonNext = document.getElementById("btn-next")
 const errorMsgEl = document.getElementById("error-msg")
 const mainContainer = document.getElementById("main-container")
 const searchInputEl = document.getElementById("search-input")
-const searchButton = document.getElementById("search-button")
+const searchButton = document.getElementById("pokeball")
+
 
 const pokedexUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
 
@@ -14,6 +15,7 @@ const pokedexUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
 let pokemonList = []
 // pokemonList.next: 
 // "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
+
 
 // nav events:
 buttonHome.addEventListener("click", () => {
@@ -37,6 +39,10 @@ const displayError = (errorMessage) => {
 
   errorMsgEl.textContent = errorMessage
 }
+
+
+
+
 
 async function getData(url = pokedexUrl) {
   const response = await fetch(url)
@@ -69,25 +75,26 @@ const setLastPage = (perPage = 20) => pokemonList.lastPage = Math.floor(pokemonL
 async function displayPokemonList(url) {
   await updatePokemonList(url)
   setLastPage()
-
-  console.log(pokemonList.results)
   mainContainer.innerHTML = ""
 
   //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonList.results) {
 
-    // get the id and image of the pokemon:
-    //console.log(pokemon.url)
     const pokemonExtraData = await getData(pokemon.url)
+   
 
     const containerEl = document.createElement("div")
+    containerEl.classList.add("pokemon-container")
     const titleEl = document.createElement("h2")
+    titleEl.classList.add("title")
     titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name}`
     const imageEl = document.createElement("img")
+    imageEl.classList.add("pokemon-regular")
     imageEl.alt = `image of ${pokemon.name}`
     imageEl.style = "max-width: 40%;"
     imageEl.src = pokemonExtraData.sprites.other["official-artwork"].front_default
 
+   
     containerEl.append(titleEl, imageEl)
     mainContainer.append(containerEl)
 
@@ -97,19 +104,28 @@ async function displayPokemonList(url) {
 
 async function displayPokemonDetails(pokemonData) {
   mainContainer.innerHTML = ""
-
-  /* const name = pokemonData.name
-  const height = pokemonData.height */
-
   const {id, name, sprites, base_experience, height, weight, types, stats} = pokemonData
 
   const containerEl = document.createElement("div")
+  containerEl.classList.add("pokemon-container")
   const titleEl = document.createElement("h2")
+  titleEl.classList.add("title")
   titleEl.textContent = `${id}. ${name}`
+
   const imageEl = document.createElement("img")
+  imageEl.classList.add("pokemon-regular")
   imageEl.alt = `image of ${name}`
   imageEl.style = "max-width: 40%;"
   imageEl.src = sprites.other["official-artwork"].front_default
+
+  
+  const shinySprite = document.createElement("img")
+  shinySprite.classList.add("pokemon-shiny")
+  shinySprite.alt = `Image of shiny ${name}`
+  shinySprite.style = "max-width: 40%;"
+  shinySprite.src = sprites.other["official-artwork"].front_shiny
+  
+
 
   const xpEl = document.createElement("p")
   xpEl.textContent = `XP: ${base_experience}`
@@ -121,6 +137,7 @@ async function displayPokemonDetails(pokemonData) {
   weightEl.textContent = `Weight: ${weight/10} Kg`
 
   const typesContainer = document.createElement("div")
+  typesContainer.classList.add("type-container")
   const typesHeaderEl = document.createElement("h3")
   typesHeaderEl.textContent = "Types:"
   typesContainer.append(typesHeaderEl)
@@ -132,6 +149,7 @@ async function displayPokemonDetails(pokemonData) {
   })
 
   const statsContainer = document.createElement("div")
+  statsContainer.classList.add("stat-container")
   const statsHeaderEl = document.createElement("h3")
   statsHeaderEl.textContent = "Stats:"
   statsContainer.append(statsHeaderEl)
@@ -144,11 +162,12 @@ async function displayPokemonDetails(pokemonData) {
   })
 
 
-  containerEl.append(titleEl, imageEl, xpEl, heightEl, weightEl, typesContainer, statsContainer)
+  containerEl.append(titleEl, imageEl, shinySprite,  xpEl, heightEl, weightEl, typesContainer, statsContainer)
   mainContainer.append(containerEl)
 }
 
 displayPokemonList()
+
 /////////////////////////////////////////////////
 //displ;ays list of pokemon based on given array of pokemons
 async function displayFilteredPokemonList(pokemonArray) {
@@ -160,15 +179,20 @@ async function displayFilteredPokemonList(pokemonArray) {
     const pokemonExtraData = await getData(pokemon.url)
 
     const containerEl = document.createElement("div")
+    containerEl.classList.add("pokemon-container")
     const titleEl = document.createElement("h2")
+    titleEl.classList.add("title")
     titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name}`
     const imageEl = document.createElement("img")
+    imageEl.classList.add("pokemon-regular")
     imageEl.alt = `image of ${pokemon.name}`
     imageEl.style = "max-width: 40%;"
     imageEl.src = pokemonExtraData.sprites.other["official-artwork"].front_default
 
     containerEl.append(titleEl, imageEl)
     mainContainer.append(containerEl)
+
+  
 
     containerEl.addEventListener("click", () => displayPokemonDetails(pokemonExtraData))
   };
@@ -177,7 +201,7 @@ async function displayFilteredPokemonList(pokemonArray) {
 searchButton.addEventListener("click", async () =>{
   const searchText = searchInputEl.value.toLowerCase()
 //check if input is valid
-  if (searchText.lenght < 3) {
+  if (searchText.length < 3) {
   displayError("Please enter 3 or more characters")
   return
 }
@@ -195,3 +219,8 @@ searchButton.addEventListener("click", async () =>{
   }
   displayFilteredPokemonList(filteredPokemons)
 })
+searchInputEl.addEventListener("keypress", function (evt) {
+  if (evt.key === "Enter") {
+    document.getElementById("search-button").click()
+  }
+});
