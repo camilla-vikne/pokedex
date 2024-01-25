@@ -1,0 +1,4 @@
+Button on containerEl
+opens dislaypokemondetails
+button on display pokemondetails
+closes dislaypokemondetails

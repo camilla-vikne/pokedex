@@ -45,24 +45,13 @@ input[type="checkbox"] {
   border-radius: 5px;
   margin-left: 20px;
 }
-.pokemon-container {
-  max-width: max-content;
-}
+
 .image-container {
   display: flex;
   justify-content: center;
   align-items: start;
 }
-.type-container {
-  border: 2px solid black;
-  max-width: max-content;
-  padding: 10px;
-}
-.stats-container {
-  border: 2px solid black;
-  max-width: max-content;
-  padding: 10px;
-}
+
 footer {
   font-size: small;
   display: flex;
@@ -150,9 +139,86 @@ footer {
 }
 .pokemon-container {
   border: 1px solid rgb(53, 53, 53);
-  padding: 20px;
+  padding: 10px;
+  width: 150px;
+  height: 150px;
+  background-color: rgba(250, 235, 215, 0.315);
+  margin: 8px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.image-container {
+  height: 100px;
   width: max-content;
+}
+.title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+.pokemon-regular {
+  height: 80%;
+  max-width: max-content;
+}
+.pokemon-details {
+  border: 1px solid rgb(53, 53, 53);
+  padding: 20px;
+  width: 800px;
+  height: 800px;
   background-color: rgba(250, 235, 215, 0.315);
   margin: 10px;
   border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title-detail {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.image-details {
+  height: 200px;
+  max-width: max-content;
+}
+.pokemon-regular-detail {
+  height: 200px;
+  max-width: max-content;
+}
+.pokemon-shiny-detail {
+  height: 200px;
+  max-width: max-content;
+}
+.physical {
+  border: solid rgba(199, 144, 66, 0.71) 5px;
+  font-size: 16px;
+  width: 300px;
+  height: 100px;
+  border-radius: 20px;
+  box-shadow: 8px 8px 8px gray;
+  background-color: rgba(248, 214, 170, 0.315);
+  padding: 10px;
+}
+.info-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 10px;
+}
+.type-container {
+  border: solid 5px rgba(221, 80, 80, 0.666);
+  max-width: max-content;
+  padding: 10px;
+  height: max-content;
+  box-shadow: 8px 8px 8px gray;
+  padding: 10px;
+  border-radius: 20px;
+}
+.stat-container {
+  border: solid 5px rgba(80, 158, 221, 0.666);
+  max-width: max-content;
+  padding: 10px;
+  height: max-content;
+  box-shadow: 8px 8px 8px gray;
+  padding: 10px;
+  border-radius: 20px;
 }

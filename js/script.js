@@ -1,17 +1,18 @@
-// get the html elements:
-const buttonHome = document.getElementById("btn-home");
-const buttonPrev = document.getElementById("btn-prev");
-const buttonNext = document.getElementById("btn-next");
-const errorMsgEl = document.getElementById("error-msg");
-const mainContainer = document.getElementById("main-container");
-const searchInputEl = document.getElementById("search-input");
-const searchButton = document.getElementById("pokeball");
-const filterMega = document.getElementById("filter-mega");
-const filterGmax = document.getElementById("filter-gmax");
-
-const pokedexUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20";
+import {
+  buttonHome,
+  buttonPrev,
+  buttonNext,
+  mainContainer,
+  searchInputEl,
+  searchButton,
+  filterMega,
+  filterGmax,
+} from "./const.js";
+import { getData } from "./data.js";
+import { displayError } from "./error.js";
 
 let pokemonList = [];
+
 // pokemonList.next:
 // "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
 
@@ -32,27 +33,6 @@ buttonPrev.addEventListener("click", () => {
       `https://pokeapi.co/api/v2/pokemon?offset=${pokemonList.lastPage}&limit=20`
     );
 });
-
-const displayError = (errorMessage) => {
-  if (errorMessage) console.warn(errorMessage);
-
-  errorMsgEl.textContent = errorMessage;
-};
-
-async function getData(url = pokedexUrl) {
-  const response = await fetch(url);
-  if (response.ok !== true) {
-    //if (response.status !== 200) {
-    displayError(`noe gikk galt. Status: ${response.status}`);
-    return;
-  }
-  // clear the error message:
-  displayError();
-
-  const data = await response.json(); // response.text()
-
-  return data;
-}
 
 /**
  * Updates pokemonList
@@ -78,22 +58,26 @@ async function displayPokemonList(url) {
   for (const pokemon of pokemonList.results) {
     const pokemonExtraData = await getData(pokemon.url);
 
-    console.log(pokemonExtraData);
     const containerEl = document.createElement("div");
     containerEl.classList.add("pokemon-container");
 
     const titleEl = document.createElement("h2");
     titleEl.classList.add("title");
-    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name}`;
+    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name} `;
+
+    const imageContainer = document.createElement("div");
+    imageContainer.classList.add("image-container");
 
     const imageEl = document.createElement("img");
     imageEl.classList.add("pokemon-regular");
     imageEl.alt = `image of ${pokemon.name}`;
-    imageEl.style = "max-width: 40%;";
+    //imageEl.style = "max-width: 40%;";
     imageEl.src =
       pokemonExtraData.sprites.other["official-artwork"].front_default;
 
-    containerEl.append(titleEl, imageEl);
+    imageContainer.append(imageEl);
+
+    containerEl.append(titleEl, imageContainer);
     mainContainer.append(containerEl);
 
     containerEl.addEventListener("click", () =>
@@ -108,27 +92,30 @@ async function displayPokemonDetails(pokemonData) {
     pokemonData;
 
   const containerEl = document.createElement("div");
-  containerEl.classList.add("pokemon-container");
+  containerEl.classList.add("pokemon-details");
   const titleEl = document.createElement("h2");
-  titleEl.classList.add("title");
-  titleEl.textContent = `${id}. ${name}`;
+  titleEl.classList.add("title-detail");
+  titleEl.textContent = `${id}. ${name} `;
   const imageContainer = document.createElement("div");
-  imageContainer.classList.add("image-container");
+  imageContainer.classList.add("image-details");
 
   const imageEl = document.createElement("img");
-  imageEl.classList.add("pokemon-regular");
+  imageEl.classList.add("pokemon-regular-detail");
   imageEl.alt = `image of ${name}`;
-  imageEl.style = "max-width: 40%;";
+
   imageEl.src = sprites.other["official-artwork"].front_default;
 
   const shinySprite = document.createElement("img");
-  shinySprite.classList.add("pokemon-shiny");
+  shinySprite.classList.add("pokemon-shiny-detail");
   shinySprite.alt = `Image of shiny ${name}`;
-  shinySprite.style = "max-width: 40%;";
   shinySprite.src = sprites.other["official-artwork"].front_shiny;
 
   imageContainer.append(imageEl, shinySprite);
 
+  const infoContainer = document.createElement("div");
+  infoContainer.classList.add("info-container");
+  const physical = document.createElement("div");
+  physical.classList.add("physical");
   const xpEl = document.createElement("p");
   xpEl.textContent = `XP: ${base_experience}`;
 
@@ -162,16 +149,9 @@ async function displayPokemonDetails(pokemonData) {
     statEl.textContent = `${stat.name}: ${base_stat} (effort:${effort})`;
     statsContainer.append(statEl);
   });
-
-  containerEl.append(
-    titleEl,
-    imageContainer,
-    xpEl,
-    heightEl,
-    weightEl,
-    typesContainer,
-    statsContainer
-  );
+  infoContainer.append(typesContainer, statsContainer);
+  physical.append(xpEl, heightEl, weightEl);
+  containerEl.append(titleEl, imageContainer, physical, infoContainer);
   mainContainer.append(containerEl);
 }
 
@@ -188,17 +168,24 @@ async function displayFilteredPokemonList(pokemonArray) {
 
     const containerEl = document.createElement("div");
     containerEl.classList.add("pokemon-container");
+
     const titleEl = document.createElement("h2");
     titleEl.classList.add("title");
-    titleEl.textContent = `${pokemonExtraData.id}.${pokemon.name}`;
+    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name} `;
+
+    const imageContainer = document.createElement("div");
+    imageContainer.classList.add("image-container");
+
     const imageEl = document.createElement("img");
     imageEl.classList.add("pokemon-regular");
     imageEl.alt = `image of ${pokemon.name}`;
-    imageEl.style = "max-width: 40%;";
+    //imageEl.style = "max-width: 40%;";
     imageEl.src =
       pokemonExtraData.sprites.other["official-artwork"].front_default;
 
-    containerEl.append(titleEl, imageEl);
+    imageContainer.append(imageEl);
+
+    containerEl.append(titleEl, imageContainer);
     mainContainer.append(containerEl);
 
     containerEl.addEventListener("click", () =>
