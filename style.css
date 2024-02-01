@@ -1,6 +1,6 @@
 /*Background image from Pokédex in Pokémon go,  copyright of Niantic / Nintendo*/
 body {
-  background-image: url(./Pokedex_Background.webp);
+  background-image: url(./images/Pokedex_Background.webp);
   background-position: center;
   background-attachment: fixed;
   background-size: contain;
@@ -120,8 +120,8 @@ footer {
 .pokemon-container {
   border: 1px solid rgb(53, 53, 53);
   padding: 10px;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   background-color: rgba(250, 235, 215, 0.315);
   margin: 8px;
   border-radius: 30px;
@@ -201,4 +201,34 @@ footer {
   box-shadow: 8px 8px 8px gray;
   padding: 10px;
   border-radius: 20px;
+}
+
+/* Add these styles for the overlay */
+.overlay-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.overlay-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
 }

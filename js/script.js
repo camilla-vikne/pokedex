@@ -8,10 +8,11 @@ import {
   filterMega,
   filterGmax,
 } from "./const.js";
-import { getData } from "./data.js";
+import { getData, getDetails } from "./data.js";
 import { displayError } from "./error.js";
 
 let pokemonList = [];
+let speciesInfo = [];
 
 // pokemonList.next:
 // "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
@@ -39,6 +40,7 @@ buttonPrev.addEventListener("click", () => {
  * @param {String} url - the url we want to get data from
  */
 const updatePokemonList = async (url) => (pokemonList = await getData(url));
+const pokemonSpecies = async (url) => (speciesInfo = await getDetails(url));
 
 /**
  * Updates the pokemonList.lastPage to given perPage-param
@@ -51,12 +53,16 @@ const setLastPage = (perPage = 20) =>
 // displays list of pokemons based on given url
 async function displayPokemonList(url) {
   await updatePokemonList(url);
+  await pokemonSpecies(url);
   setLastPage();
   mainContainer.innerHTML = "";
 
   //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonList.results) {
     const pokemonExtraData = await getData(pokemon.url);
+    const pokemonSpeciesInfo = await getDetails(
+      pokemon.url.replace("pokemon", "pokemon-species")
+    );
 
     const containerEl = document.createElement("div");
     containerEl.classList.add("pokemon-container");
@@ -65,24 +71,27 @@ async function displayPokemonList(url) {
     titleEl.classList.add("title");
     titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name} `;
 
+    const generationEl = document.createElement("p");
+    generationEl.textContent = ` ${pokemonSpeciesInfo.generation.name}`;
+
     const imageContainer = document.createElement("div");
     imageContainer.classList.add("image-container");
 
     const imageEl = document.createElement("img");
     imageEl.classList.add("pokemon-regular");
     imageEl.alt = `image of ${pokemon.name}`;
-    //imageEl.style = "max-width: 40%;";
-    imageEl.src =
-      pokemonExtraData.sprites.other["official-artwork"].front_default;
+    imageEl.src = pokemonExtraData.sprites.other.showdown.front_default;
 
     imageContainer.append(imageEl);
 
-    containerEl.append(titleEl, imageContainer);
+    containerEl.append(titleEl, generationEl, imageContainer);
     mainContainer.append(containerEl);
 
-    containerEl.addEventListener("click", () =>
-      displayPokemonDetails(pokemonExtraData)
-    );
+    containerEl.addEventListener("click", () => {
+      displayPokemonDetails(pokemonExtraData);
+    });
+
+    mainContainer.appendChild(containerEl);
   }
 }
 
@@ -90,12 +99,25 @@ async function displayPokemonDetails(pokemonData) {
   mainContainer.innerHTML = "";
   const { id, name, sprites, base_experience, height, weight, types, stats } =
     pokemonData;
+  const speciesInfoUrl = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
+  const pokemonSpeciesInfo = await getDetails(speciesInfoUrl);
 
   const containerEl = document.createElement("div");
   containerEl.classList.add("pokemon-details");
   const titleEl = document.createElement("h2");
   titleEl.classList.add("title-detail");
   titleEl.textContent = `${id}. ${name} `;
+
+  const descriptionEntries = pokemonSpeciesInfo.flavor_text_entries;
+  const filteredDescription = descriptionEntries.find(
+    (entry) => entry.language.name === "en"
+  );
+
+  const descriptionEl = document.createElement("p");
+  descriptionEl.textContent = filteredDescription
+    ? filteredDescription.flavor_text
+    : "No description available";
+
   const imageContainer = document.createElement("div");
   imageContainer.classList.add("image-details");
 
@@ -149,7 +171,8 @@ async function displayPokemonDetails(pokemonData) {
     statEl.textContent = `${stat.name}: ${base_stat} (effort:${effort})`;
     statsContainer.append(statEl);
   });
-  infoContainer.append(typesContainer, statsContainer);
+
+  infoContainer.append(descriptionEl, typesContainer, statsContainer);
   physical.append(xpEl, heightEl, weightEl);
   containerEl.append(titleEl, imageContainer, physical, infoContainer);
   mainContainer.append(containerEl);
@@ -165,9 +188,15 @@ async function displayFilteredPokemonList(pokemonArray) {
   //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonArray) {
     const pokemonExtraData = await getData(pokemon.url);
+    const pokemonSpeciesInfo = await getDetails(
+      pokemon.url.replace("pokemon", "pokemon-species")
+    );
 
     const containerEl = document.createElement("div");
     containerEl.classList.add("pokemon-container");
+
+    const generationEl = document.createElement("p");
+    generationEl.textContent = ` ${pokemonSpeciesInfo.generation.name}`;
 
     const titleEl = document.createElement("h2");
     titleEl.classList.add("title");
@@ -179,18 +208,18 @@ async function displayFilteredPokemonList(pokemonArray) {
     const imageEl = document.createElement("img");
     imageEl.classList.add("pokemon-regular");
     imageEl.alt = `image of ${pokemon.name}`;
-    //imageEl.style = "max-width: 40%;";
-    imageEl.src =
-      pokemonExtraData.sprites.other["official-artwork"].front_default;
+    imageEl.src = pokemonExtraData.sprites.other.showdown.front_default;
 
     imageContainer.append(imageEl);
 
-    containerEl.append(titleEl, imageContainer);
+    containerEl.append(titleEl, generationEl, imageContainer);
     mainContainer.append(containerEl);
 
-    containerEl.addEventListener("click", () =>
-      displayPokemonDetails(pokemonExtraData)
-    );
+    containerEl.addEventListener("click", () => {
+      displayPokemonDetails(pokemonExtraData);
+    });
+
+    mainContainer.appendChild(containerEl);
   }
 }
 
@@ -201,9 +230,8 @@ searchButton.addEventListener("click", async () => {
     displayError("Please enter 3 or more characters");
     return;
   }
-  //clear error message:
   displayError();
-  //V 1. get the list of all pokemons in the api-database (this can be done by setting the limit to -1 or a number equal or larger to the total amount of pokemons in the database)
+
   const pokemonResult = await getData(
     "https://pokeapi.co/api/v2/pokemon?offset=0&limit=-1"
   );
