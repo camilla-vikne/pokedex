@@ -7,12 +7,22 @@ import {
   searchButton,
   filterMega,
   filterGmax,
+  kanto,
+  johto,
+  hoenn,
+  sinnoh,
+  unova,
+  kalos,
+  alola,
+  galar,
+  paldea
 } from "./const.js";
 import { getData, getDetails } from "./data.js";
 import { displayError } from "./error.js";
 
 let pokemonList = [];
 let speciesInfo = [];
+
 
 // pokemonList.next:
 // "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
@@ -53,38 +63,29 @@ const setLastPage = (perPage = 20) =>
 // displays list of pokemons based on given url
 async function displayPokemonList(url) {
   await updatePokemonList(url);
-  await pokemonSpecies(url);
+
   setLastPage();
   mainContainer.innerHTML = "";
 
   //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonList.results) {
     const pokemonExtraData = await getData(pokemon.url);
-    const pokemonSpeciesInfo = await getDetails(
-      pokemon.url.replace("pokemon", "pokemon-species")
-    );
-
+   
     const containerEl = document.createElement("div");
-    containerEl.classList.add("pokemon-container");
+    containerEl.classList.add("pokemon-container-main");
 
-    const titleEl = document.createElement("h2");
-    titleEl.classList.add("title");
-    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name} `;
-
-    const generationEl = document.createElement("p");
-    generationEl.textContent = ` ${pokemonSpeciesInfo.generation.name}`;
 
     const imageContainer = document.createElement("div");
-    imageContainer.classList.add("image-container");
+    imageContainer.classList.add("image-container-main");
 
     const imageEl = document.createElement("img");
-    imageEl.classList.add("pokemon-regular");
+    imageEl.classList.add("image-main");
     imageEl.alt = `image of ${pokemon.name}`;
     imageEl.src = pokemonExtraData.sprites.other.showdown.front_default;
 
     imageContainer.append(imageEl);
 
-    containerEl.append(titleEl, generationEl, imageContainer);
+    containerEl.append(imageContainer);
     mainContainer.append(containerEl);
 
     containerEl.addEventListener("click", () => {
@@ -97,29 +98,16 @@ async function displayPokemonList(url) {
 
 async function displayPokemonDetails(pokemonData) {
   mainContainer.innerHTML = "";
-  const { id, name, sprites, base_experience, height, weight, types, stats } =
+  const { id, name, sprites, height, weight, types } =
     pokemonData;
   const speciesInfoUrl = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
   const pokemonSpeciesInfo = await getDetails(speciesInfoUrl);
 
   const containerEl = document.createElement("div");
   containerEl.classList.add("pokemon-details");
-  const titleEl = document.createElement("h2");
-  titleEl.classList.add("title-detail");
-  titleEl.textContent = `${id}. ${name} `;
-
-  const descriptionEntries = pokemonSpeciesInfo.flavor_text_entries;
-  const filteredDescription = descriptionEntries.find(
-    (entry) => entry.language.name === "en"
-  );
-
-  const descriptionEl = document.createElement("p");
-  descriptionEl.textContent = filteredDescription
-    ? filteredDescription.flavor_text
-    : "No description available";
 
   const imageContainer = document.createElement("div");
-  imageContainer.classList.add("image-details");
+  imageContainer.classList.add("image-container-details");
 
   const imageEl = document.createElement("img");
   imageEl.classList.add("pokemon-regular-detail");
@@ -134,12 +122,15 @@ async function displayPokemonDetails(pokemonData) {
 
   imageContainer.append(imageEl, shinySprite);
 
+  const titleEl = document.createElement("h2");
+  titleEl.classList.add("title-detail");
+  titleEl.textContent = `${id}. ${name} `;
+
   const infoContainer = document.createElement("div");
-  infoContainer.classList.add("info-container");
+  infoContainer.classList.add("info-container-details");
   const physical = document.createElement("div");
-  physical.classList.add("physical");
-  const xpEl = document.createElement("p");
-  xpEl.textContent = `XP: ${base_experience}`;
+  physical.classList.add("physical-details");
+
 
   const heightEl = document.createElement("p");
   heightEl.textContent = `Height: ${height / 10} M`;
@@ -148,33 +139,32 @@ async function displayPokemonDetails(pokemonData) {
   weightEl.textContent = `Weight: ${weight / 10} Kg`;
 
   const typesContainer = document.createElement("div");
-  typesContainer.classList.add("type-container");
-  const typesHeaderEl = document.createElement("h3");
-  typesHeaderEl.textContent = "Types:";
-  typesContainer.append(typesHeaderEl);
+typesContainer.classList.add("type-container-details");
+const typesHeaderEl = document.createElement("h3");
+typesHeaderEl.textContent = "Type:";
+typesContainer.append(typesHeaderEl);
 
-  types.forEach((type) => {
-    const typeEl = document.createElement("p");
-    typeEl.textContent = type.type.name;
-    typesContainer.append(typeEl);
-  });
 
-  const statsContainer = document.createElement("div");
-  statsContainer.classList.add("stat-container");
-  const statsHeaderEl = document.createElement("h3");
-  statsHeaderEl.textContent = "Stats:";
-  statsContainer.append(statsHeaderEl);
+const typeNames = types.map((type) => type.type.name);
+const joinedTypes = typeNames.join(" / ");
 
-  stats.forEach((value) => {
-    const { stat, base_stat, effort } = value;
-    const statEl = document.createElement("p");
-    statEl.textContent = `${stat.name}: ${base_stat} (effort:${effort})`;
-    statsContainer.append(statEl);
-  });
+const typeEl = document.createElement("p");
+typeEl.textContent = joinedTypes;
+typesContainer.append(typeEl);
 
-  infoContainer.append(descriptionEl, typesContainer, statsContainer);
-  physical.append(xpEl, heightEl, weightEl);
-  containerEl.append(titleEl, imageContainer, physical, infoContainer);
+  const descriptionEntries = pokemonSpeciesInfo.flavor_text_entries;
+  const filteredDescription = descriptionEntries.find(
+    (entry) => entry.language.name === "en"
+  );
+ 
+  const descriptionEl = document.createElement("p");
+  descriptionEl.classList.add("description-details")
+  descriptionEl.textContent = filteredDescription
+    ? filteredDescription.flavor_text
+    : "No description available";
+  infoContainer.append(descriptionEl );
+  physical.append(weightEl, heightEl, typesContainer);
+  containerEl.append(imageContainer, titleEl, physical, infoContainer);
   mainContainer.append(containerEl);
 }
 
@@ -188,19 +178,10 @@ async function displayFilteredPokemonList(pokemonArray) {
   //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonArray) {
     const pokemonExtraData = await getData(pokemon.url);
-    const pokemonSpeciesInfo = await getDetails(
-      pokemon.url.replace("pokemon", "pokemon-species")
-    );
-
+   
+   
     const containerEl = document.createElement("div");
     containerEl.classList.add("pokemon-container");
-
-    const generationEl = document.createElement("p");
-    generationEl.textContent = ` ${pokemonSpeciesInfo.generation.name}`;
-
-    const titleEl = document.createElement("h2");
-    titleEl.classList.add("title");
-    titleEl.textContent = `${pokemonExtraData.id}. ${pokemon.name} `;
 
     const imageContainer = document.createElement("div");
     imageContainer.classList.add("image-container");
@@ -212,7 +193,7 @@ async function displayFilteredPokemonList(pokemonArray) {
 
     imageContainer.append(imageEl);
 
-    containerEl.append(titleEl, generationEl, imageContainer);
+    containerEl.append( imageContainer);
     mainContainer.append(containerEl);
 
     containerEl.addEventListener("click", () => {
@@ -250,6 +231,7 @@ searchButton.addEventListener("click", async () => {
     }
     return false;
   });
+  
 
   if (!filteredPokemons.length > 0) {
     displayError("No pokémons found");
@@ -262,3 +244,61 @@ searchInputEl.addEventListener("keypress", function (evt) {
     document.getElementById("search-button").click();
   }
 });
+// sorts the pokemon by region
+kanto.addEventListener("click", () => displayPokemonsByRegion("kanto"));
+johto.addEventListener("click", () => displayPokemonsByRegion("johto"));
+hoenn.addEventListener("click", () => displayPokemonsByRegion("hoenn"));
+sinnoh.addEventListener("click", () => displayPokemonsByRegion("sinnoh"));
+unova.addEventListener("click", () => displayPokemonsByRegion("unova"));
+kalos.addEventListener("click", () => displayPokemonsByRegion("kalos"));
+alola.addEventListener("click", () => displayPokemonsByRegion("alola"));
+galar.addEventListener("click", () => displayPokemonsByRegion("galar"));
+paldea.addEventListener("click", () => displayPokemonsByRegion("paldea"));
+
+async function displayPokemonsByRegion(region) {
+  const regionPokemon = await getRegionPokemon(region);
+  if (regionPokemon) {
+    displayFilteredPokemonList(regionPokemon);
+  } else {
+    displayError(`No Pokémon found for ${region} region`);
+  }
+}
+
+async function getRegionPokemon(region) {
+
+  let regionUrl;
+  switch (region) {
+    case "kanto":
+      regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=151";
+      break;
+    case "johto":
+      regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=151&limit=100";
+      break;
+  case "hoenn":
+    regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=251&limit=134"
+    break;
+case "sinnoh":
+  regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=386&limit=107"
+  break;
+  case "unova":
+  regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=494&limit=156"
+  break;
+  case "kalos":
+  regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=649&limit=72"
+  break;
+  case "alola":
+  regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=721&limit=88"
+  break;
+  case "galar":
+  regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=809&limit=96"
+  break;
+  case "paldea":
+  regionUrl = "https://pokeapi.co/api/v2/pokemon?offset=905&limit=120"
+  break;
+    default:
+      return null; 
+  }
+
+  const regionData = await getData(regionUrl);
+  return regionData.results;
+}

@@ -4,6 +4,7 @@ import { displayError } from "./error.js";
 const pokedexUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=100";
 const pokemonSpecies = "https://pokeapi.co/api/v2/pokemon-species/";
 
+
 async function getData(url = pokedexUrl) {
   const response = await fetch(url);
   if (response.ok !== true) {
@@ -28,3 +29,4 @@ async function getDetails(url = pokemonSpecies) {
   const details = await response.json();
   return details;
 }
+// Assuming you have already imported necessary elements and functions

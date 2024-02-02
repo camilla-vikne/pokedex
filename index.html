@@ -11,29 +11,49 @@
 </head>
 
 <body>
+    <h1 class="pokedex">POKÉDEX</h1> 
+    <nav id="regions">
+        <div class="pokedex-button" id="kanto"> <img src="./images/ic_pokedex.png" alt="kanto pokedex" srcset=""> <br><div class="amount">151</div><br>Kanto</div>
+
+        <div class="pokedex-button"  id="johto"><img src="./images/ic_johto.png" alt="johto pokedex" srcset="">
+            <br><div class="amount">100</div><br> Johto</div>
+
+        <div class="pokedex-button"  id="hoenn"> <img src="./images/ic_hoenn.png" alt="hoenn pokedex" srcset=""><br><div class="amount">135</div><br>Hoenn</div>
+
+        <div class="pokedex-button"  id="sinnoh"> <img src="./images/ic_sinnoh.png" alt="sinnoh pokedex" srcset=""><br><div class="amount">107</div><br>Sinnoh</div>
+
+        <div class="pokedex-button"  id="unova"> <img src="./images/ic_unova.png" alt="unova pokedex" srcset=""><br><div class="amount">156</div><br>Unova</div>
+
+        <div class="pokedex-button"  id="kalos"> <img src="./images/ic_kalos.png" alt="kalos pokedex" srcset=""><br><div class="amount">72</div><br>Kalos</div>
+
+        <div class="pokedex-button"  id="alola"> <img src="./images/ic_alola.png" alt="alola pokedex" srcset=""><br><div class="amount">88</div><br>Alola</div>
+
+        <div class="pokedex-button"  id="galar"> <img src="./images/ic_galar.png" alt="galar pokedex" srcset=""><br><div class="amount">96</div><br>Galar</div>
+
+        <div class="pokedex-button"  id="paldea"> <img src="./images/icons8-books-50.png" alt="paldea pokedex" srcset=""><br> <div class="amount">110</div><br>Paldea</div>
+    </nav>
+   <div class="line"></div>
     <nav>
-        <button id="btn-home">Home</button>
-        <button id="btn-prev">Previous</button>
-        <button id="btn-next">Next</button> <br>
+        <button id="btn-home" type="button">Home</button>
         <input type="text" id="search-input" placeholder="Search for Pokèmon by name">
         <div id="pokeball">
-            <button id="search-button"></button>
+            <button id="search-button" type="button"></button>
         </div>
-    </nav>
-    <div id="search-filter">
-        <input type="checkbox" class="checkbox" id="filter-mega"> <label for="filter-mega">Search for mega</label>
-        <input type="checkbox" class="checkbox" id="filter-gmax"> <label for="filter-gmax">Search for Gmax</label>
-
+        <div class="checkboxes">
+            <input type="checkbox" class="checkbox" id="filter-mega"> <br><label for="filter-mega">Search for mega</label>
+        <input type="checkbox" class="checkbox" id="filter-gmax"> <br><label for="filter-gmax">Search for Gmax</label>
     </div>
+    </nav>
+ 
 
     <p id="error-msg"></p>
     <div id="main-container">
     </div>
-    <!--pokemon id, pokemon name, pokemon image
-        event: onclick => show pokemon details in full page
-        -->
     </div>
-
+    <div class="footer-buttons">
+    <button id="btn-prev" type="button">Previous</button>
+    <button id="btn-next" type="button">Next</button> 
+</div>
 
     <footer>Pokémon and Pokémon character names are trademarks of Nintendo.</footer>
 </body>

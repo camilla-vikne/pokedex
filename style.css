@@ -4,52 +4,71 @@ body {
   background-position: center;
   background-attachment: fixed;
   background-size: contain;
+  font-family: Arial, Helvetica, sans-serif;
 }
+/*Header, menu and  search bar styles*/
+.pokedex{
+  display: flex;
+  justify-content: center;
+  color: rgb(128, 113, 146);
+}
+#regions{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.amount{
+  background-color: rgb(165, 146, 187);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  color: black;
+  padding:2px 8px;
 
+}
+.pokedex-button img{
+  height: 50px;
+  width: auto;
+  color: white;
+display: flex;
+justify-content: center;
+align-items: center;
+
+}
+.pokedex-button{
+  border: none;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  background-color: none;
+  color: rgb(73, 73, 73);
+ 
+}
+.line{
+  width: 100%;
+  height: 5px;
+  background-color: rgb(165, 146, 187);
+}
 nav {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 10px;
   height: 100px;
   width: 100%;
 }
-#search-filter {
-  display: flex;
-  justify-content: center;
-  margin: 10px;
-  font-size: 20px;
-}
-input[type="checkbox"] {
-  border: 2px solid black;
-  height: 20px;
-  width: 20px;
-  border-radius: 5px;
-  margin-left: 20px;
-}
-
-.image-container {
-  display: flex;
-  justify-content: center;
-  align-items: start;
-}
-
-footer {
-  font-size: small;
-  display: flex;
-  justify-content: center;
-}
-/*Pokeball design from https://www.youtube.com/watch?v=GTim0on1D-0 */
-#btn-home,
-#btn-prev,
-#btn-next {
-  height: 50px;
-  width: 70px;
-  padding: 5px;
+#btn-home{
+  background-color: rgb(165, 146, 187);
+  height: 40px;
   border: none;
   border-radius: 20px;
-  margin: 10px;
-  background-color: grey;
-}
-#search-input {
+  width: 80px;
+ 
+}#search-input {
   height: 50px;
   width: 200px;
   border: 1px solid grey;
@@ -57,6 +76,7 @@ footer {
   margin: 10px;
   padding: 5px;
 }
+/*Pokeball design from https://www.youtube.com/watch?v=GTim0on1D-0 */
 #pokeball {
   border-radius: 50%;
   height: 50px;
@@ -111,124 +131,67 @@ footer {
   border: 1px black solid;
   border-radius: 50%;
 }
+.checkboxes{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+input[type="checkbox"] {
+  border: 2px solid black;
+  height: 20px;
+  width: 20px;
+  border-radius: 5px;
+  margin-left: 20px;
+}
+
+
+/*Main container styling and search styling*/
+
 #main-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   text-transform: capitalize;
+  font-size: 12px;
+  gap: 10px;
 }
-.pokemon-container {
-  border: 1px solid rgb(53, 53, 53);
-  padding: 10px;
-  width: 200px;
-  height: 200px;
-  background-color: rgba(250, 235, 215, 0.315);
-  margin: 8px;
-  border-radius: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.image-container {
-  height: 100px;
-  width: max-content;
-}
-.title {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-}
-.pokemon-regular {
-  height: 80%;
-  max-width: max-content;
-}
-.pokemon-details {
-  border: 1px solid rgb(53, 53, 53);
-  padding: 20px;
-  width: 800px;
-  height: 800px;
-  background-color: rgba(250, 235, 215, 0.315);
+.pokemon-container-main{
+  flex: 0 0 calc(18% - 20px);
   margin: 10px;
-  border-radius: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.title-detail {
-  font-family: Arial, Helvetica, sans-serif;
-}
-.image-details {
-  height: 200px;
-  max-width: max-content;
-}
-.pokemon-regular-detail {
-  height: 200px;
-  max-width: max-content;
-}
-.pokemon-shiny-detail {
-  height: 200px;
-  max-width: max-content;
-}
-.physical {
-  border: solid rgba(199, 144, 66, 0.71) 5px;
-  font-size: 16px;
-  width: 300px;
-  height: 100px;
-  border-radius: 20px;
-  box-shadow: 8px 8px 8px gray;
-  background-color: rgba(248, 214, 170, 0.315);
-  padding: 10px;
-}
-.info-container {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  margin-top: 10px;
-}
-.type-container {
-  border: solid 5px rgba(221, 80, 80, 0.666);
-  max-width: max-content;
-  padding: 10px;
-  height: max-content;
-  box-shadow: 8px 8px 8px gray;
-  padding: 10px;
-  border-radius: 20px;
-}
-.stat-container {
-  border: solid 5px rgba(80, 158, 221, 0.666);
-  max-width: max-content;
-  padding: 10px;
-  height: max-content;
-  box-shadow: 8px 8px 8px gray;
-  padding: 10px;
-  border-radius: 20px;
+  box-sizing: border-box;
 }
 
-/* Add these styles for the overlay */
-.overlay-container {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  align-items: center;
+/*Display details styling*/
+.pokemon-details
+.title-detail
+.description-details
+.image-container-details
+.pokemon-regular-detail
+.pokemon-shiny-detail
+.info-container-details
+.physical-details
+.type-container-details
+.stat-container-details
+
+
+/*Footer items*/
+footer {
+  font-size: small;
+  display: flex;
   justify-content: center;
-  z-index: 1;
 }
-
-.overlay-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 600px;
-  width: 100%;
+.footer-buttons{
+  display: flex;
+  justify-content: space-between;
 }
+#btn-prev,
+#btn-next {
+  background-color: rgb(165, 146, 187);
+  height: 40px;
+  border: none;
+  border-radius: 20px;
+  width: 80px;
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  cursor: pointer;
 }
