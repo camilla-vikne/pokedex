@@ -252,7 +252,7 @@ input[type="checkbox"] {
 
 /*Footer items*/
 footer {
-  font-size: small;
+  font-size: 10px;
   display: flex;
   justify-content: center;
 }

@@ -24,8 +24,7 @@ let pokemonList = [];
 let speciesInfo = [];
 
 
-// pokemonList.next:
-// "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
+
 
 // nav events:
 buttonHome.addEventListener("click", () => {
@@ -51,6 +50,8 @@ buttonPrev.addEventListener("click", () => {
  */
 const updatePokemonList = async (url) => (pokemonList = await getData(url));
 const pokemonSpecies = async (url) => (speciesInfo = await getDetails(url));
+
+//modal functionality
 const modal = document.getElementById("pokemonModal");
 const closeModalBtn = document.querySelector(".close-modal");
 closeModalBtn.addEventListener("click", () => {
@@ -84,7 +85,6 @@ async function displayPokemonList(url) {
   setLastPage();
   mainContainer.innerHTML = "";
 
-  //pokemonList.results.forEach(async pokemon => { // array methods dont fully support async-await, hence we use a normal for-of loop instead:
   for (const pokemon of pokemonList.results) {
     const pokemonExtraData = await getData(pokemon.url);
    
@@ -113,7 +113,7 @@ async function displayPokemonList(url) {
     mainContainer.appendChild(containerEl);
   }
 }
-
+//displays the info fetched about the individual pokemon
 async function displayPokemonDetails(pokemonData) {
   mainContainer.innerHTML = "";
   const { id, name, sprites, height, weight, types } =
@@ -227,7 +227,7 @@ infoContainer.classList.add("info-container-details");
 displayPokemonList();
 
 /////////////////////////////////////////////////
-//displ;ays list of pokemon based on given array of pokemons
+//displays list of pokemon based on search results or filter buttons
 async function displayFilteredPokemonList(pokemonArray) {
   mainContainer.innerHTML = "";
 
@@ -259,10 +259,10 @@ async function displayFilteredPokemonList(pokemonArray) {
     mainContainer.appendChild(containerEl);
   }
 }
-
+//search buttons functionality
 searchButton.addEventListener("click", async () => {
   const searchText = searchInputEl.value.toLowerCase();
-  //check if input is valid
+  
   if (searchText.length < 3) {
     displayError("Please enter 3 or more characters");
     return;
