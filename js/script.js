@@ -51,7 +51,24 @@ buttonPrev.addEventListener("click", () => {
  */
 const updatePokemonList = async (url) => (pokemonList = await getData(url));
 const pokemonSpecies = async (url) => (speciesInfo = await getDetails(url));
-
+const modal = document.getElementById("pokemonModal");
+const closeModalBtn = document.querySelector(".close-modal");
+closeModalBtn.addEventListener("click", () => {
+  closeModal();
+});
+window.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+function openModal(content) {
+  const modalContentContainer = document.getElementById("modal-content-container");
+  modalContentContainer.innerHTML = content;
+  modal.style.display = "block";
+}
+function closeModal() {
+  modal.style.display = "none";
+}
 /**
  * Updates the pokemonList.lastPage to given perPage-param
  * @param {Number} perPage - number of pokemons per page (default 20)
@@ -88,8 +105,9 @@ async function displayPokemonList(url) {
     containerEl.append(imageContainer);
     mainContainer.append(containerEl);
 
-    containerEl.addEventListener("click", () => {
-      displayPokemonDetails(pokemonExtraData);
+    containerEl.addEventListener("click", async () => {
+      const pokemonDetailsContent = await displayPokemonDetails(pokemonExtraData);
+      openModal(pokemonDetailsContent);
     });
 
     mainContainer.appendChild(containerEl);
@@ -102,6 +120,8 @@ async function displayPokemonDetails(pokemonData) {
     pokemonData;
   const speciesInfoUrl = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
   const pokemonSpeciesInfo = await getDetails(speciesInfoUrl);
+ 
+  openModal(displayPokemonDetails);
 
   const containerEl = document.createElement("div");
   containerEl.classList.add("pokemon-details");
@@ -198,7 +218,10 @@ infoContainer.classList.add("info-container-details");
   infoContainer.append(descriptionEl );
   physical.append(weightEl, heightEl, typesContainer);
   containerEl.append(imageContainer,changeImage, titleInfo, physical, lineDiv, infoContainer);
-  mainContainer.append(containerEl);
+  const wrapperDiv = document.createElement("div");
+  wrapperDiv.appendChild(containerEl);
+
+  return wrapperDiv.innerHTML;
 }
 
 displayPokemonList();
