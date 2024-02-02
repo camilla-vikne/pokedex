@@ -358,3 +358,9 @@ case "sinnoh":
   const regionData = await getData(regionUrl);
   return regionData.results;
 }
+
+
+//Added modal with help from chatGPT, but changed the names of the functions. 
+//Other sources have been: pokeapi.co, stackOverflow, w3Schools and 
+//https://github.com/PokeMiners/pogo_assets/blob/master/Images/Filters/ic_pokedex.png 
+// for image assets regarding logos and pokedex images
