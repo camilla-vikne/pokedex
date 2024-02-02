@@ -163,7 +163,7 @@ titleInfo.classList.add("title-info")
 
   const titleImage = document.createElement("img")
   titleImage.classList.add("title-image")
-  titleImage.setAttribute("src", "/images/icons8-pokeball-64.png")
+  titleImage.setAttribute("src", "./images/icons8-pokeball-64.png")
 
   const titleEl = document.createElement("h2");
   titleEl.classList.add("title-detail");
