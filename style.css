@@ -156,15 +156,15 @@ input[type="checkbox"] {
   justify-content: space-around;
   text-transform: capitalize;
   font-size: 12px;
-  gap: 10px;
+  gap: 5px;
 }
 .pokemon-container-main{
-  flex: 0 0 calc(18% - 20px);
-  margin: 5px;
+  flex: 0 0 calc(20% - 20px);
+  margin: 2px;
   box-sizing: border-box;
 }
 .image-main{
-  max-width: 50%;
+  max-width: 90%;
   overflow: none;
 }
 
