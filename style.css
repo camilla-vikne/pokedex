@@ -285,7 +285,7 @@ footer {
 }
 
 .modal-content {
-  /*background-image: url("./images/Pokedex_Background.webp");*/
+  background-image: url("./images/Pokedex_Background.webp");
   background-size: contain;
   background-position: center;
   margin: 10% auto;
