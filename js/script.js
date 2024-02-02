@@ -81,7 +81,7 @@ async function displayPokemonList(url) {
     const imageEl = document.createElement("img");
     imageEl.classList.add("image-main");
     imageEl.alt = `image of ${pokemon.name}`;
-    imageEl.src = pokemonExtraData.sprites.other.showdown.front_default;
+    imageEl.src = pokemonExtraData.sprites.other.home.front_default;
 
     imageContainer.append(imageEl);
 
@@ -113,21 +113,47 @@ async function displayPokemonDetails(pokemonData) {
   imageEl.classList.add("pokemon-regular-detail");
   imageEl.alt = `image of ${name}`;
 
-  imageEl.src = sprites.other["official-artwork"].front_default;
+  imageEl.src = sprites.other.showdown.front_default;
 
   const shinySprite = document.createElement("img");
   shinySprite.classList.add("pokemon-shiny-detail");
   shinySprite.alt = `Image of shiny ${name}`;
-  shinySprite.src = sprites.other["official-artwork"].front_shiny;
+  shinySprite.src = sprites.other.showdown.front_shiny;
+  shinySprite.style.display="none"
+
+  const changeImage = document.createElement("button")
+  changeImage.classList.add("change-image")
+  
+  let isShiny = false
+
+  changeImage.addEventListener("click", ()=>{
+    if(isShiny){
+      imageEl.style.display="block";
+      shinySprite.style.display="none"
+    } else{
+      imageEl.style.display="none";
+      shinySprite.style.display ="block"
+    }
+    isShiny=!isShiny
+  })
 
   imageContainer.append(imageEl, shinySprite);
+const titleInfo = document.createElement("div")
+titleInfo.classList.add("title-info")
+
+  const titleImage = document.createElement("img")
+  titleImage.classList.add("title-image")
+  titleImage.setAttribute("src", "/images/icons8-pokeball-64.png")
 
   const titleEl = document.createElement("h2");
   titleEl.classList.add("title-detail");
-  titleEl.textContent = `${id}. ${name} `;
+  const idNums = String(id).padStart(4, '0')
+  titleEl.textContent = `${idNums} ${name} `;
 
-  const infoContainer = document.createElement("div");
-  infoContainer.classList.add("info-container-details");
+  titleInfo.append(titleImage, titleEl)
+
+
+
   const physical = document.createElement("div");
   physical.classList.add("physical-details");
 
@@ -140,7 +166,7 @@ async function displayPokemonDetails(pokemonData) {
 
   const typesContainer = document.createElement("div");
 typesContainer.classList.add("type-container-details");
-const typesHeaderEl = document.createElement("h3");
+const typesHeaderEl = document.createElement("p");
 typesHeaderEl.textContent = "Type:";
 typesContainer.append(typesHeaderEl);
 
@@ -152,6 +178,12 @@ const typeEl = document.createElement("p");
 typeEl.textContent = joinedTypes;
 typesContainer.append(typeEl);
 
+const lineDiv = document.createElement("div")
+lineDiv.classList.add("line-break");
+
+const infoContainer = document.createElement("div");
+infoContainer.classList.add("info-container-details");
+
   const descriptionEntries = pokemonSpeciesInfo.flavor_text_entries;
   const filteredDescription = descriptionEntries.find(
     (entry) => entry.language.name === "en"
@@ -162,9 +194,10 @@ typesContainer.append(typeEl);
   descriptionEl.textContent = filteredDescription
     ? filteredDescription.flavor_text
     : "No description available";
+
   infoContainer.append(descriptionEl );
   physical.append(weightEl, heightEl, typesContainer);
-  containerEl.append(imageContainer, titleEl, physical, infoContainer);
+  containerEl.append(imageContainer,changeImage, titleInfo, physical, lineDiv, infoContainer);
   mainContainer.append(containerEl);
 }
 
@@ -179,21 +212,21 @@ async function displayFilteredPokemonList(pokemonArray) {
   for (const pokemon of pokemonArray) {
     const pokemonExtraData = await getData(pokemon.url);
    
-   
     const containerEl = document.createElement("div");
-    containerEl.classList.add("pokemon-container");
+    containerEl.classList.add("pokemon-container-main");
+
 
     const imageContainer = document.createElement("div");
-    imageContainer.classList.add("image-container");
+    imageContainer.classList.add("image-container-main");
 
     const imageEl = document.createElement("img");
-    imageEl.classList.add("pokemon-regular");
+    imageEl.classList.add("image-main");
     imageEl.alt = `image of ${pokemon.name}`;
-    imageEl.src = pokemonExtraData.sprites.other.showdown.front_default;
+    imageEl.src = pokemonExtraData.sprites.other.home.front_default;
 
     imageContainer.append(imageEl);
 
-    containerEl.append( imageContainer);
+    containerEl.append(imageContainer);
     mainContainer.append(containerEl);
 
     containerEl.addEventListener("click", () => {
