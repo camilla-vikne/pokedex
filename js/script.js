@@ -115,47 +115,30 @@ async function displayPokemonList(url) {
 }
 //displays the info fetched about the individual pokemon
 async function displayPokemonDetails(pokemonData) {
-  mainContainer.innerHTML = "";
+
   const { id, name, sprites, height, weight, types } =
     pokemonData;
   const speciesInfoUrl = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
   const pokemonSpeciesInfo = await getDetails(speciesInfoUrl);
  
-  openModal(displayPokemonDetails);
+  //openModal(displayPokemonDetails);
 
   const containerEl = document.createElement("div");
   containerEl.classList.add("pokemon-details");
 
   const imageContainer = document.createElement("div");
-  imageContainer.classList.add("image-container-details");
+imageContainer.classList.add("image-container-details");
 
-  const imageEl = document.createElement("img");
-  imageEl.classList.add("pokemon-regular-detail");
-  imageEl.alt = `image of ${name}`;
+const imageEl = document.createElement("img");
+imageEl.classList.add("pokemon-regular-detail");
+imageEl.alt = `image of ${name}`;
+imageEl.src = sprites.other.showdown.front_default;
 
-  imageEl.src = sprites.other.showdown.front_default;
+const shinySprite = document.createElement("img");
+shinySprite.classList.add("pokemon-shiny-detail");
+shinySprite.alt = `Image of shiny ${name}`;
+shinySprite.src = sprites.other.showdown.front_shiny;
 
-  const shinySprite = document.createElement("img");
-  shinySprite.classList.add("pokemon-shiny-detail");
-  shinySprite.alt = `Image of shiny ${name}`;
-  shinySprite.src = sprites.other.showdown.front_shiny;
-  shinySprite.style.display="none"
-
-  const changeImage = document.createElement("button")
-  changeImage.classList.add("change-image")
-  
-  let isShiny = false
-
-  changeImage.addEventListener("click", ()=>{
-    if(isShiny){
-      imageEl.style.display="block";
-      shinySprite.style.display="none"
-    } else{
-      imageEl.style.display="none";
-      shinySprite.style.display ="block"
-    }
-    isShiny=!isShiny
-  })
 
   imageContainer.append(imageEl, shinySprite);
 const titleInfo = document.createElement("div")
@@ -217,7 +200,7 @@ infoContainer.classList.add("info-container-details");
 
   infoContainer.append(descriptionEl );
   physical.append(weightEl, heightEl, typesContainer);
-  containerEl.append(imageContainer,changeImage, titleInfo, physical, lineDiv, infoContainer);
+  containerEl.append(imageContainer, titleInfo, physical, lineDiv, infoContainer);
   const wrapperDiv = document.createElement("div");
   wrapperDiv.appendChild(containerEl);
 
@@ -252,8 +235,9 @@ async function displayFilteredPokemonList(pokemonArray) {
     containerEl.append(imageContainer);
     mainContainer.append(containerEl);
 
-    containerEl.addEventListener("click", () => {
-      displayPokemonDetails(pokemonExtraData);
+    containerEl.addEventListener("click", async () => {
+      const pokemonDetailsContent = await displayPokemonDetails(pokemonExtraData);
+      openModal(pokemonDetailsContent);
     });
 
     mainContainer.appendChild(containerEl);

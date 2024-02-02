@@ -207,17 +207,7 @@ input[type="checkbox"] {
   width: max-content;
 
 }
-.change-image{
-  cursor: pointer;
-  border-radius: 100%;
-  border: none;
-  background-color: rgb(238, 238, 84);
-  height: 50px;
-  width: 50px;
-  background-image: url("./images/ic_shiny_white.png");
-  background-size: contain;
-  background-position: center;
-}
+
 .physical-details{
   display: flex;
   justify-content: center;
@@ -270,7 +260,7 @@ footer {
 
 }
 
-/*modal experiment*/
+/*modal styling*/
 .modal {
   display: none;
   position: fixed;
@@ -285,7 +275,7 @@ footer {
 }
 
 .modal-content {
-  /*background-image: url("./images/Pokedex_Background.webp");*/
+  background-image: url("./images/Pokedex_Background.webp");
   background-size: contain;
   background-position: center;
   margin: 10% auto;
